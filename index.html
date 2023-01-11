@@ -7,24 +7,25 @@
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <py-config>
+        [[fetch]]
+        files = ["/reflow.py"]
+    </py-config>
 </head>
 
 
 <body>
     <py-script>
-        import textwrap
+        from reflow import reflow
 
-        def reflow(*args, **kwargs):
+        def run_reflow():
             content = Element("input-text").element.value
             width = int(Element("input-width").element.value)
             indent = int(Element("input-indent").element.value)
-            text = " ".join(l.strip() for l in content.splitlines())
-            text = textwrap.fill(text, width - indent)
-            if indent > 0:
-                text = textwrap.indent(text, ' ' * indent)
+            comments = Element("input-comment").element.value
+            text = reflow(content, width, indent, comments)
             display(text, target="display-write", append=False)
         
-        reflow()
     </py-script>
     <div class="col-lg-6 mx-auto p-4 py-md-5">
         <h1>Text Reflow - PyScript</h1>
@@ -32,17 +33,21 @@
         <form class="form-floating">
             <div class="row">
                 <div class="col form-floating">
-                    <input type="number" class="py-input form-control mb-1" id="input-width" value="70" py-onClick="reflow()">
+                    <input type="number" class="py-input form-control mb-1" id="input-width" value="70" py-onKeyDown="run_reflow()>
                     <label for="input-width">Width</label>
                 </div>
                 <div class="col form-floating">
-                    <input type="number" class="py-input form-control mb-1" id="input-indent" value="4" py-onClick="reflow()">
+                    <input type="number" class="py-input form-control mb-1" id="input-indent" value="4" py-onKeyDown="run_reflow()>
                     <label for="input-indent">Indentation</label>
+                </div>
+                <div class="col form-floating">
+                    <input type="text" class="py-input form-control mb-1" id="input-comment" value="" py-onKeyDown="run_reflow()>
+                    <label for="input-comment">Comment Chars</label>
                 </div>
             </div>
             <div>
                 <label for="input-text" class="form-label">Input Text</label>
-                <textarea id="input-text" class="py-input mb-3 form-control" style="height: 100px; width: 100%" placeholder="Paste text here" py-onKeyDown="reflow()"></textarea>
+                <textarea id="input-text" class="py-input mb-3 form-control" style="height: 100px; width: 100%" placeholder="Paste text here" py-onKeyDown="run_reflow()"></textarea>
                 <div id="input-text-help" class="form-text">
                     If you paste text and nothing happens, try pressing enter. This function is set to trigger on key down.
                 </div>
@@ -55,6 +60,11 @@
                 <pre><code id="display-write"></code></pre>
             </div>
         </div>
+        <footer class="footer mt-5 py-5 ">
+            <div class="col-lg-6">
+                <span class="text-muted">Made by <a href="https://github.com/pmbaumgartner">@pmbaumgartner</a> with <a href="https://docs.pyscript.net/">PyScript</a>. <a href="https://github.com/pmbaumgartner/text-reflow-pyscript">Source</a>.</span>
+            </div>
+        </footer>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
