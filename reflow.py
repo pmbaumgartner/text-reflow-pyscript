@@ -13,7 +13,8 @@ def reflow(content: str, width: int = 80, indent: int = 0, comments: str = "") -
             line = line.lstrip().lstrip(comments).lstrip()
         content_lines.append(line.strip() + " ")
     text = "".join(content_lines)
-    preceeding_width = indent + len(comments)
+    comment_width = 0 if comments == "" else len(comments) + 1
+    preceeding_width = indent + comment_width
     # text = " ".join(l.strip() for l in content.splitlines() if l.isspace())
     text_lines = textwrap.wrap(text, width - preceeding_width)
     if comments != "":
